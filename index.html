@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>淡入淡出方法（小米）</title>
+    <style type="text/css">
+        *{
+            margin:0px;
+            padding:0px;
+        }
+        #box{
+            width:1226px;
+            height:460px;
+            margin:100px auto;
+            position:relative;
+        }
+        img{
+            position:absolute;
+            display:none;
+        }
+
+        #left,#right{
+            position:absolute;
+            top:50%;
+            width:50px;
+            height:80px;
+            font-size:40px;
+            text-align:center;
+            line-height:80px;
+            color:#fff;
+            background:rgba(0,0,0,0.5);
+            margin-top:-40px;
+            cursor:pointer;
+        }
+        #left:hover,#right:hover{
+            background:rgba(0,0,0,0.7);
+        }
+        #left{
+            left:250px;
+        }
+        #right{
+            right:0px;
+        }
+        ul{
+            width:150px;
+            height:15px;
+            position:absolute;
+            bottom:20px;
+            right:80px;
+        }
+        li{
+            list-style-type:none;
+            width:10px;
+            height:10px;
+            border-radius:7px;
+            border:1px solid #fff;
+            float:left;
+            margin-right:15px;
+            background:#fff;
+            cursor:pointer;
+        }
+        li.active{
+            background:#666;
+        }
+    </style>
+</head>
+<body>
+    <div id="box">
+        <img src="images/1.jpg" alt="" />
+        <img src="images/2.jpg" alt="" />
+        <img src="images/3.jpg" alt="" />
+        <img src="images/4.jpg" alt="" />
+        <img src="images/5.jpg" alt="" />
+        <div id="left">&lt;</div>
+        <div id="right">&gt;</div>
+        <ul>
+            <li class="active"></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
+    </div>
+<script type="text/javascript">
+
+    var oImg=document.getElementsByTagName("img");
+    var prev=document.getElementById("left");
+    var next=document.getElementById("right");
+    var oLi=document.getElementsByTagName("li");
+    var $index=0;
+
+    oImg[0].style.display="block";
+    for(var i=0;i<oLi.length;i++){
+        oLi[i].index=i;//index是自定义属性
+        oLi[i].onclick=function(){
+            $index=this.index;//保存下标
+            for(var j=0;j<oLi.length;j++){
+                oLi[j].className="";
+                oImg[j].style.display="none";
+            }
+            this.className="active";
+            oImg[$index].fadeIn(1);
+        }
+    }
+
+    next.onclick=function(){
+        oImg[$index].fadeOut(1);
+        $index++;
+        if($index>4){$index=0}
+        f();
+        oImg[$index].fadeIn(1);
+    }
+    prev.onclick=function(){
+        oImg[$index].fadeOut(1);
+        $index--;
+        if($index<0){$index=4}
+        f();//函数封装的调用
+        oImg[$index].fadeIn(1);
+    }
+    function f(){
+        for(var i=0;i<oLi.length;i++){
+            for(var j=0;j<oLi.length;j++){
+                oLi[j].className="";
+                oImg[j].style.display="none";
+            }
+            oLi[$index].className="active";
+        }
+    }
+//    function fadeIn(obj,speed){
+//        var opa=0;
+//        obj.style.display="block";
+//        obj.style.opacity=0;
+//        var timer=setInterval(function(){
+//            opa+=speed;
+//            if(opa>=100){
+//                opa=100;
+//                clearInterval(timer);
+//            }
+//            obj.style.opacity=opa/100;
+//        },13);
+//    }
+//    function fadeOut(obj,speed) {
+//        var opa = 100;
+//        var timer = setInterval(function () {
+//            opa -= speed;
+//            if (opa <= 0) {
+//                opa = 0;
+//                clearInterval(timer);
+//                obj.style.display = "none";
+//            }
+//            obj.style.opacity = opa / 100;
+//        }, 13);
+//    }
+    oImg[0].constructor.prototype.fadeIn=function(speed){
+        var opa=0;
+        this.style.display="block";
+        this.style.opacity=0;
+        var thisDom=this;
+        var timer=setInterval(function(){
+            opa+=speed;
+            if(opa>=100){
+                opa=100;
+                clearInterval(timer);
+            }
+            thisDom.style.opacity=opa/100;
+        },13);
+    }
+    oImg[0].constructor.prototype.fadeOut=function(speed){
+        var opa = 100;
+        var thisDom=this;
+        var timer = setInterval(function (){
+            opa -= speed;
+            if (opa <=0) {
+                opa = 0;
+                clearInterval(timer);
+                thisDom.style.display = "none";
+            }
+            thisDom.style.opacity = opa / 100;
+        }, 13);
+    }
+
+
+</script>
+
+</body>
+</html>
